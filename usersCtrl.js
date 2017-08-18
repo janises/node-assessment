@@ -38,5 +38,18 @@ module.exports = {
             return res.status(200).send(filteredData)
         }
         res.status(200).send(userData)    
+    },
+    getUserById: (req, res) => {
+        let userById = userData.find(user => {
+            if(user.id === +req.params.id) {
+                return user;
+            }
+        });
+        if(userById) {
+            res.status(200).send(userById)
+        } else {
+            res.status(404).json(null)
+        }
+        
     }
 }
