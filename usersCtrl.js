@@ -1,5 +1,6 @@
 var userData = require('./userData.json');
 let filteredData;
+let id = userData.length+1;
 
 module.exports = {
     getAllUsers: (req, res) => {
@@ -54,7 +55,7 @@ module.exports = {
     }, 
     getAdmins: (req, res) => {
         let admins = userData.filter(user=> {
-            if(user.type === 'admin') {
+            if(user.type.toLowerCase() === 'admin') {
                 return user
             }
         })
@@ -62,10 +63,42 @@ module.exports = {
     },
     getNonadmins: (req, res) => {
         let nonadmins = userData.filter(user => {
-            if(user.type !== 'admin') {
+            if(user.type.toLowerCase() !== 'admin') {
                 return user
             }
         })
         res.status(200).send(nonadmins);
+    },
+    getUsersByType: (req, res) => {
+        let usersByType = userData.filter(user => {
+            if(user.type === req.params.type) {
+                return user
+            }
+        })
+        res.status(200).send(usersByType);
+    },
+    updateUserById: (req, res) => {
+        userData.forEach(user => {
+            if(user.id === +req.params.id) {
+                user.type = req.body.type;
+                user.first_name = req.body.first_name;
+                user.last_name = req.body.last_name;
+            }
+        })
+        res.status(200).send(userData)
+    },
+    addUser: (req, res) => {
+        let newUser = Object.assign({}, {id}, req.body)
+        userData.push(newUser)
+        id++;
+        res.status(200).send(userData);
+    }, 
+    deleteUser: (req, res) => {
+        let remainingUsers = userData.filter(user => {
+            if(user.id !== +req.params.id) {
+                return user;
+            }
+        })
+        res.status(200).send(remainingUsers)
     }
 }
