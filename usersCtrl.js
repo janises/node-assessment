@@ -51,5 +51,21 @@ module.exports = {
             res.status(404).json(null)
         }
         
+    }, 
+    getAdmins: (req, res) => {
+        let admins = userData.filter(user=> {
+            if(user.type === 'admin') {
+                return user
+            }
+        })
+        res.status(200).send(admins)
+    },
+    getNonadmins: (req, res) => {
+        let nonadmins = userData.filter(user => {
+            if(user.type !== 'admin') {
+                return user
+            }
+        })
+        res.status(200).send(nonadmins);
     }
 }
